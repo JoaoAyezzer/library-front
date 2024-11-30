@@ -16,24 +16,20 @@ import {
 const data = {
   navMain: [
     {
-      title: "Getting Started",
-      url: "#",
+      title: "Livros",
+      url: "/books",
     },
     {
-      title: "Building Your Application",
-      url: "#",
+      title: "Categorias",
+      url: "/categories",
     },
     {
-      title: "API Reference",
-      url: "#",
+      title: "Empréstimos",
+      url: "/loans",
     },
     {
-      title: "Architecture",
-      url: "#",
-    },
-    {
-      title: "Community",
-      url: "#",
+      title: "Usuários",
+      url: "/users",
     },
   ],
 };
