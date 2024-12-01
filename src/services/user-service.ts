@@ -44,6 +44,16 @@ class UserService {
       throw error;
     }
   }
+
+  async deleteById(id: string): Promise<AxiosResponse> {
+    try {
+      const response = await http.client.delete<AxiosResponse>(`/users/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching books:", error);
+      throw error;
+    }
+  }
 }
 
 export const userService = new UserService();

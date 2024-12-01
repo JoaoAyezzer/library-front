@@ -54,7 +54,6 @@ export default function UserForm({ userId }: UserFormProps) {
           console.error("Failed to fetch users:", error);
         }
       };
-
       fetchUser();
     }
   }, [form, userId]);
