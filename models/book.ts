@@ -9,3 +9,5 @@ interface BookResponse {
   createdAt: string;
   updatedAt: string;
 }
+
+export type { BookResponse };

@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import BookCard from "./book-card";
 import { bookService } from "@/services/book-service";
+import { BookResponse } from "@/models/book";
 
 const BookList: React.FC = () => {
   const [books, setBooks] = useState<BookResponse[]>([]);

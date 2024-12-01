@@ -1,4 +1,5 @@
 import { http } from "@/lib/http.config";
+import { BookResponse } from "@/models/book";
 
 class BookService {
   async getAllBooks(): Promise<BookResponse[]> {
