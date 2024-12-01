@@ -1,3 +1,4 @@
+import { BookResponse } from "@/models/book";
 import { Button } from "./ui/button";
 import {
   Card,
