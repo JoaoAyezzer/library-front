@@ -15,7 +15,7 @@ import UserForm from "./user-form";
 
 interface UserDrawerProps {
   triggerButton: React.ReactNode;
-  userId?: string;
+  userId?: string | null;
   onClose: () => void;
   isOpen: boolean;
 }

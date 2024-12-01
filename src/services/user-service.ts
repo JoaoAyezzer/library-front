@@ -32,6 +32,18 @@ class UserService {
       throw error;
     }
   }
+  async updateUser(id: string, data: UserRequest): Promise<AxiosResponse> {
+    try {
+      const response = await http.client.put<AxiosResponse>(
+        `/users/${id}`,
+        data
+      );
+      return response;
+    } catch (error) {
+      console.error("Error fetching books:", error);
+      throw error;
+    }
+  }
 }
 
 export const userService = new UserService();

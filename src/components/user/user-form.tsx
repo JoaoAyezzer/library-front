@@ -14,8 +14,7 @@ import {
   FormMessage,
 } from "@/src/components/ui/form";
 import { Input } from "@/src/components/ui/input";
-import { useEffect, useState } from "react";
-import { UserResponse } from "@/src/models/user";
+import { useEffect } from "react";
 import { userService } from "@/src/services/user-service";
 import { toast } from "@/src/hooks/use-toast";
 
@@ -31,34 +30,34 @@ const formSchema = z.object({
   }),
 });
 interface UserFormProps {
-  userId?: string;
+  userId?: string | null;
 }
 export default function UserForm({ userId }: UserFormProps) {
-  const [user, setUser] = useState<UserResponse | null>(null);
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+    },
+  });
 
   useEffect(() => {
     if (userId) {
-      const fetchUsers = async () => {
+      const fetchUser = async () => {
         try {
           const data = await userService.getById(userId);
-          setUser(data);
+          form.setValue("name", data.name);
+          form.setValue("email", data.email);
+          form.setValue("phone", data.phone);
         } catch (error) {
           console.error("Failed to fetch users:", error);
         }
       };
 
-      fetchUsers();
+      fetchUser();
     }
-  }, [userId]);
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: user?.name ?? "",
-      email: user?.email ?? "",
-      phone: user?.phone ?? "",
-    },
-  });
+  }, [form, userId]);
 
   function onToast(title: string, description: string) {
     toast({
@@ -69,7 +68,17 @@ export default function UserForm({ userId }: UserFormProps) {
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
     if (userId) {
-      // Update user
+      userService
+        .updateUser(userId, values)
+        .then((response) => {
+          form.reset();
+          if (response.status === 204) {
+            onToast("Sucesso!", "Usuário atualizado com sucesso");
+          }
+        })
+        .catch((error) => {
+          onToast("Erro!", error.message);
+        });
       return;
     }
     userService.createUser(values).then((response) => {
