@@ -14,10 +14,24 @@ import {
   FormMessage,
 } from "@/src/components/ui/form";
 import { Input } from "@/src/components/ui/input";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "@/src/hooks/use-toast";
 import { bookService } from "@/src/services/book-service";
-import { Trash2 } from "lucide-react";
+import { Trash2, PlusCircle, CalendarIcon } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { cn } from "@/src/lib/utils";
+import { Calendar } from "../ui/calendar";
+import { format } from "date-fns";
+import { CategoryResponse } from "@/src/models/category";
+import { categoryService } from "@/src/services/category-service";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { ScrollArea } from "../ui/scroll-area";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -57,6 +71,8 @@ interface BookFormProps {
 }
 
 export default function BookForm({ bookId, onSubmitSuccess }: BookFormProps) {
+  const [categories, setCategories] = useState<CategoryResponse[]>([]);
+
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -86,7 +102,16 @@ export default function BookForm({ bookId, onSubmitSuccess }: BookFormProps) {
     name: "authors",
   });
 
+  const fetchCategories = async () => {
+    try {
+      const data = await categoryService.getAllCategories();
+      setCategories(data);
+    } catch (error) {
+      console.error("Failed to fetch categories:", error);
+    }
+  };
   useEffect(() => {
+    fetchCategories();
     if (bookId) {
       const fetchBook = async () => {
         try {
@@ -118,7 +143,6 @@ export default function BookForm({ bookId, onSubmitSuccess }: BookFormProps) {
   }, [bookId, form]);
 
   function onSubmit(values: FormSchemaType) {
-    // Transform the values to match the original service expectation
     const submitData = {
       ...values,
       isbns: values.isbns.map((isbn) => isbn.value),
@@ -130,7 +154,7 @@ export default function BookForm({ bookId, onSubmitSuccess }: BookFormProps) {
       : bookService.createBook(submitData);
 
     submitAction
-      .then((response) => {
+      .then(() => {
         form.reset();
         const successMessage = bookId
           ? "Livro atualizado com sucesso"
@@ -146,121 +170,197 @@ export default function BookForm({ bookId, onSubmitSuccess }: BookFormProps) {
       .catch((error) => {
         toast({
           title: "Erro!",
-          description: error.message,
+          description: error.response.data.message ?? "Erro ao salvar livro",
           variant: "destructive",
         });
       });
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Título do Livro</FormLabel>
-              <FormControl>
-                <Input placeholder="Digite o título do livro" {...field} />
-              </FormControl>
-              <FormDescription>Nome completo do livro</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormItem>
-          <FormLabel>ISBNs</FormLabel>
-          {isbnFields.map((field, index) => (
-            <div key={field.id} className="flex items-center space-x-2">
-              <FormControl>
-                <Input
-                  placeholder="ISBN"
-                  {...form.register(`isbns.${index}.value`)}
-                />
-              </FormControl>
-              {isbnFields.length > 1 && (
-                <Button
-                  type="button"
-                  variant="destructive"
-                  size="icon"
-                  onClick={() => removeIsbn(index)}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+    <ScrollArea className="rounded-md h-[500px] px-4">
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="grid grid-cols-1 md:grid-cols-2 gap-4"
+        >
+          <div className="md:col-span-2">
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Título do Livro</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="fetchCategoriesDigite o título do livro"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>Nome completo do livro</FormDescription>
+                  <FormMessage />
+                </FormItem>
               )}
-            </div>
-          ))}
-          <Button
-            type="button"
-            variant="outline"
-            className="mt-2"
-            onClick={() => appendIsbn({ value: "" })}
-          >
-            Adicionar ISBN
-          </Button>
-          <FormDescription>ISBNs do livro</FormDescription>
-          <FormMessage />
-        </FormItem>
+            />
+          </div>
 
-        <FormItem>
-          <FormLabel>Autores</FormLabel>
-          {authorFields.map((field, index) => (
-            <div key={field.id} className="flex items-center space-x-2">
-              <FormControl>
-                <Input
-                  placeholder="Nome do autor"
-                  {...form.register(`authors.${index}.value`)}
-                />
-              </FormControl>
-              {authorFields.length > 1 && (
-                <Button
-                  type="button"
-                  variant="destructive"
-                  size="icon"
-                  onClick={() => removeAuthor(index)}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+          <FormItem>
+            <FormLabel>ISBNs</FormLabel>
+            <div className="space-y-2">
+              {isbnFields.map((field, index) => (
+                <div key={field.id} className="flex items-center space-x-2">
+                  <FormControl className="flex-grow">
+                    <Input
+                      placeholder="ISBN"
+                      {...form.register(`isbns.${index}.value`)}
+                    />
+                  </FormControl>
+                  {isbnFields.length > 1 && (
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="icon"
+                      onClick={() => removeIsbn(index)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+              ))}
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                onClick={() => appendIsbn({ value: "" })}
+              >
+                <PlusCircle className="mr-2 h-4 w-4" /> Adicionar ISBN
+              </Button>
+            </div>
+            <FormDescription>ISBNs do livro</FormDescription>
+            <FormMessage />
+          </FormItem>
+
+          <FormItem>
+            <FormLabel>Autores</FormLabel>
+            <div className="space-y-2">
+              {authorFields.map((field, index) => (
+                <div key={field.id} className="flex items-center space-x-2">
+                  <FormControl className="flex-grow">
+                    <Input
+                      placeholder="Nome do autor"
+                      {...form.register(`authors.${index}.value`)}
+                    />
+                  </FormControl>
+                  {authorFields.length > 1 && (
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="icon"
+                      onClick={() => removeAuthor(index)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+              ))}
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                onClick={() => appendAuthor({ value: "" })}
+              >
+                <PlusCircle className="mr-2 h-4 w-4" /> Adicionar Autor
+              </Button>
+            </div>
+            <FormDescription>Autores do livro</FormDescription>
+            <FormMessage />
+          </FormItem>
+          <div className="md:col-span-2">
+            <FormField
+              control={form.control}
+              name="publishedDate"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Data de publicação</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-full pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value instanceof Date &&
+                          !isNaN(field.value.getTime()) ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Selecione a data</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) =>
+                          date > new Date() || date < new Date("1900-01-01")
+                        }
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormDescription>
+                    informe a Data de publicação do livro
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
               )}
-            </div>
-          ))}
-          <Button
-            type="button"
-            variant="outline"
-            className="mt-2"
-            onClick={() => appendAuthor({ value: "" })}
-          >
-            Adicionar Autor
-          </Button>
-          <FormDescription>Autores do livro</FormDescription>
-          <FormMessage />
-        </FormItem>
+            />
+          </div>
+          <div className="md:col-span-2">
+            <FormField
+              control={form.control}
+              name="categoryId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Categoria</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>
+                    Selecione uma categoria para o livro
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
-        <FormField
-          control={form.control}
-          name="publishedDate"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Data de Publicação</FormLabel>
-              <FormControl>
-                <Input
-                  type="date"
-                  value={field.value}
-                  onChange={(e) => field.onChange(new Date(e.target.value))}
-                />
-              </FormControl>
-              <FormDescription>Data de publicação do livro</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Button type="submit" className="w-full">
-          Salvar
-        </Button>
-      </form>
-    </Form>
+          <div className="md:col-span-2">
+            <Button type="submit" className="w-full">
+              Salvar
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </ScrollArea>
   );
 }

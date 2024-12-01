@@ -26,7 +26,7 @@ export default function BookDrawer({
   return (
     <Drawer open={isOpen} onOpenChange={onClose}>
       <DrawerContent>
-        <div className="mx-auto w-full max-w-sm">
+        <div className="mx-auto w-full max-w-md max-h-screen">
           <DrawerHeader>
             <DrawerTitle>
               {bookId ? "Editar livro" : "Formulário de novo livro"}
