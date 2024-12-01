@@ -68,8 +68,8 @@ export function CategoryComponent() {
   return (
     <>
       <div className="flex flex-row justify-between">
-        <h1>Usuários</h1>
-        <Button onClick={() => handleDrawerForCreate()}>Novo usuário</Button>
+        <h1>Categorias</h1>
+        <Button onClick={() => handleDrawerForCreate()}>Nova Categoria</Button>
       </div>
       <CategoryDrawer
         onClose={handleDrawerClose}
