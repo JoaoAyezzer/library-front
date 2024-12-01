@@ -7,7 +7,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "./ui/table";
+} from "../ui/table";
 import { UserResponse } from "@/models/user";
 import { useEffect, useState } from "react";
 import { userService } from "@/services/user-service";
