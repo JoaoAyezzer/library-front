@@ -28,32 +28,30 @@ export default function UserList() {
   }, []);
 
   return (
-    <div>
-      <Table>
-        <TableCaption>Lista de usuários</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">Nome</TableHead>
-            <TableHead>E-mail</TableHead>
-            <TableHead>Telefone</TableHead>
-            <TableHead>Criado em</TableHead>
-            <TableHead>Alterado em</TableHead>
-            <TableHead className="text-right">Opções</TableHead>
+    <Table>
+      <TableCaption>Lista de usuários</TableCaption>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-[100px]">Nome</TableHead>
+          <TableHead>E-mail</TableHead>
+          <TableHead>Telefone</TableHead>
+          <TableHead>Criado em</TableHead>
+          <TableHead>Alterado em</TableHead>
+          <TableHead className="text-right">Opções</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {users.map((user) => (
+          <TableRow key={user.id}>
+            <TableCell className="font-medium">{user.name}</TableCell>
+            <TableCell className="font-medium">{user.email}</TableCell>
+            <TableCell className="font-medium">{user.phone}</TableCell>
+            <TableCell>{user.createdAt}</TableCell>
+            <TableCell>{user.updatedAt}</TableCell>
+            <TableCell className="text-right"></TableCell>
           </TableRow>
-        </TableHeader>
-        <TableBody>
-          {users.map((user) => (
-            <TableRow key={user.id}>
-              <TableCell className="font-medium">{user.name}</TableCell>
-              <TableCell className="font-medium">{user.email}</TableCell>
-              <TableCell className="font-medium">{user.phone}</TableCell>
-              <TableCell>{user.createdAt}</TableCell>
-              <TableCell>{user.updatedAt}</TableCell>
-              <TableCell className="text-right"></TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+        ))}
+      </TableBody>
+    </Table>
   );
 }
