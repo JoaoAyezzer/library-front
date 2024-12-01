@@ -20,6 +20,14 @@ class LoanService {
       throw error;
     }
   }
+  async updateLoan(id: string): Promise<AxiosResponse> {
+    try {
+      return await http.client.patch<AxiosResponse>(`/book-loans/${id}`);
+    } catch (error) {
+      console.error("Error fetching book-loans:", error);
+      throw error;
+    }
+  }
 }
 
 export const loanService = new LoanService();

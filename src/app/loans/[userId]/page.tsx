@@ -12,6 +12,7 @@ export default function UserLoan({ params }: { params: { userId: string } }) {
 
   const [bookId, setBookId] = useState<string>("");
   const [openDrawer, setOpenDrawer] = useState(false);
+
   const fetchBooks = async () => {
     try {
       const data = await bookService.getAllBooks();
@@ -40,14 +41,16 @@ export default function UserLoan({ params }: { params: { userId: string } }) {
     setBookId(id);
     setOpenDrawer(true);
   };
+
   const handleDrawerClose = () => {
     setOpenDrawer(false);
   };
+
   return (
     <div className="flex flex-col gap-6">
       <h1>Livros recomendados para esse usuário</h1>
       <div>
-        <div className="flex gap-4 overflow-x-auto">
+        <div className="grid grid-cols-2 gap-4 overflow-y-auto">
           {recommendedBooks.length > 0 ? (
             recommendedBooks.map((book) => (
               <BookCard
@@ -62,7 +65,7 @@ export default function UserLoan({ params }: { params: { userId: string } }) {
         </div>
       </div>
       <h1>Todos os livros</h1>
-      <div className="flex gap-4 overflow-x-auto">
+      <div className="grid grid-cols-2 gap-4 overflow-y-auto">
         {books.map((book) => (
           <BookCard
             key={book.id}

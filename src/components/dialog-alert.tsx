@@ -14,6 +14,7 @@ export type DialogAlertProps = {
   title: string;
   description: string;
   buttonTrigger: React.ReactNode;
+  disabled?: boolean;
   onConfirm: () => void;
 };
 
@@ -21,11 +22,14 @@ export default function DialogAlert({
   title,
   description,
   buttonTrigger,
+  disabled,
   onConfirm,
 }: DialogAlertProps) {
   return (
     <AlertDialog>
-      <AlertDialogTrigger>{buttonTrigger}</AlertDialogTrigger>
+      <AlertDialogTrigger disabled={disabled}>
+        {buttonTrigger}
+      </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>

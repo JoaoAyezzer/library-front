@@ -55,7 +55,7 @@ const BookCard: React.FC<BookCardProps> = ({
         <p>Autores: {authors.join(", ")}</p>
       </CardContent>
       <CardFooter className="justify-between">
-        <Button onClick={onBorrow}>Emprestar</Button>
+        {onBorrow && <Button onClick={onBorrow}>Emprestar</Button>}
         {onEdit && (
           <Button variant="outline" onClick={onEdit}>
             Editar

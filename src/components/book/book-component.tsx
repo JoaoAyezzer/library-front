@@ -34,13 +34,9 @@ const BookComponent: React.FC = () => {
     setIsDrawerOpen(true);
   };
 
-  const handleBorrow = (bookId: string) => {
-    console.log(`Borrow book with id: ${bookId}`);
-  };
-
   return (
     <div className="w-full h-full">
-      <div className="flex flex-row justify-between">
+      <div className="flex flex-row justify-between mb-4">
         <h1>Livros</h1>
         <Button onClick={() => handleDrawerForCreate()}>
           Cadastrar novo livro
@@ -51,18 +47,17 @@ const BookComponent: React.FC = () => {
         onClose={handleDrawerClose}
         bookId={bookId}
       />
-      <div className="max-h-80 w-full overflow-auto mt-8">
-        <div className="grid grid-cols-3 gap-4 p-4">
-          {books.map((book) => (
-            <BookCard
-              key={book.id}
-              book={book}
-              onEdit={() => onEditBook(book.id)}
-              onFetchBooks={() => fetchBooks()}
-              onBorrow={() => handleBorrow(book.id)}
-            />
-          ))}
-        </div>
+
+      <div className="grid grid-cols-2 gap-4 overflow-y-auto">
+        {books.map((book) => (
+          <BookCard
+            key={book.id}
+            book={book}
+            onEdit={() => onEditBook(book.id)}
+            onFetchBooks={() => fetchBooks()}
+            deleteEnabled
+          />
+        ))}
       </div>
     </div>
   );

@@ -14,6 +14,8 @@ import {
 } from "../ui/table";
 import SelectUserPopover from "../select-user-popover";
 import { Button } from "../ui/button";
+import DialogAlert from "../dialog-alert";
+import { toast } from "@/src/hooks/use-toast";
 
 export default function LoanComponent() {
   const [loans, setLoans] = useState<LoanResponse[]>([]);
@@ -26,10 +28,29 @@ export default function LoanComponent() {
       console.error("Failed to fetch users:", error);
     }
   };
+
   useEffect(() => {
     fetchLoans();
   }, []);
 
+  const onReturnLoan = (id: string) => {
+    loanService
+      .updateLoan(id)
+      .then(() => {
+        toast({
+          title: "Devolvido",
+          description: "O livro foi devolvido com sucesso",
+        });
+        fetchLoans();
+      })
+      .catch((error) => {
+        toast({
+          title: "Erro",
+          description: error.response.data.message ?? "Erro ao devolver livro",
+        });
+        console.error("Failed to return loan:", error);
+      });
+  };
   return (
     <>
       <div className="flex flex-row justify-between">
@@ -56,7 +77,15 @@ export default function LoanComponent() {
               <TableCell className="font-medium">{loan.loanDate}</TableCell>
               <TableCell>{loan.updatedAt}</TableCell>
               <TableCell>{loan.status}</TableCell>
-              <TableCell className="text-right"></TableCell>
+              <TableCell className="text-right">
+                <DialogAlert
+                  disabled={loan.status.toLowerCase() === "entregue"}
+                  buttonTrigger={<Button variant="outline">Devolver</Button>}
+                  title="Devlolução de livro"
+                  description="Tem certeza que deseja realizar a devlolução do livro?"
+                  onConfirm={() => onReturnLoan(loan.id)}
+                />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
