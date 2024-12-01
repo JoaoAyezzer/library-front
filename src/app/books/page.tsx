@@ -1,14 +1,5 @@
-import BookList from "@/src/components/book-list";
-import { Button } from "@/src/components/ui/button";
+import BookComponent from "@/src/components/book/book-component";
 
 export default function Book() {
-  return (
-    <div>
-      <div className="flex flex-row justify-between">
-        <h1>Livros</h1>
-        <Button>Cadastar novo livro</Button>
-      </div>
-      <BookList />
-    </div>
-  );
+  return <BookComponent />;
 }

@@ -14,7 +14,6 @@ import {
 import CategoryForm from "./category-form";
 
 interface UserDrawerProps {
-  triggerButton: React.ReactNode;
   categoryId?: string | null;
   onClose: () => void;
   isOpen: boolean;

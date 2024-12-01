@@ -74,7 +74,6 @@ export default function UserComponent() {
         <Button onClick={() => handleDrawerForCreate()}>Novo usuário</Button>
       </div>
       <UserDrawer
-        triggerButton={<Button>Novo usuário</Button>}
         onClose={handleDrawerClose}
         isOpen={isDrawerOpen}
         userId={userId}

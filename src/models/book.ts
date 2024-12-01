@@ -10,4 +10,12 @@ interface BookResponse {
   updatedAt: string;
 }
 
-export type { BookResponse };
+interface BookRequest {
+  title: string;
+  isbns: string[];
+  authors: string[];
+  publishedDate: Date;
+  categoryId: string;
+}
+
+export type { BookResponse, BookRequest };

@@ -1,5 +1,4 @@
 "use client";
-
 import * as React from "react";
 import { Button } from "@/src/components/ui/button";
 import {
@@ -11,31 +10,35 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/src/components/ui/drawer";
-import UserForm from "./user-form";
+import BookForm from "./book-form";
 
 interface UserDrawerProps {
-  userId?: string | null;
+  bookId?: string | null;
   onClose: () => void;
   isOpen: boolean;
 }
 
-export function UserDrawer({ userId, onClose, isOpen }: UserDrawerProps) {
+export default function BookDrawer({
+  bookId,
+  onClose,
+  isOpen,
+}: UserDrawerProps) {
   return (
     <Drawer open={isOpen} onOpenChange={onClose}>
       <DrawerContent>
         <div className="mx-auto w-full max-w-sm">
           <DrawerHeader>
             <DrawerTitle>
-              {userId ? "Editar usuário" : "Formulário de novo usuário"}
+              {bookId ? "Editar livro" : "Formulário de novo livro"}
             </DrawerTitle>
             <DrawerDescription>
-              {userId
-                ? "Atualize as informações do usuário"
-                : "Preencha o formulário para criar novo usuário"}
+              {bookId
+                ? "Atualize as informações do livro"
+                : "Preencha o formulário para criar novo livro"}
             </DrawerDescription>
           </DrawerHeader>
           <div className="p-4 pb-0">
-            <UserForm userId={userId} />
+            <BookForm bookId={bookId} />
           </div>
           <DrawerFooter>
             <DrawerClose asChild>

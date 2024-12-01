@@ -72,7 +72,6 @@ export function CategoryComponent() {
         <Button onClick={() => handleDrawerForCreate()}>Novo usuário</Button>
       </div>
       <CategoryDrawer
-        triggerButton={<Button>Novo usuário</Button>}
         onClose={handleDrawerClose}
         isOpen={isDrawerOpen}
         categoryId={categoryId}
