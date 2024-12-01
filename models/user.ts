@@ -7,4 +7,10 @@ interface UserResponse {
   updatedAt: string;
 }
 
-export type { UserResponse };
+interface UserRequest {
+  name: string;
+  email: string;
+  phone: string;
+}
+
+export type { UserResponse, UserRequest };

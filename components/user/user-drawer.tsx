@@ -10,26 +10,33 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from "@/components/ui/drawer";
 import UserForm from "./user-form";
 
-export function UserDrawer() {
+interface UserDrawerProps {
+  triggerButton: React.ReactNode;
+  userId?: string;
+  onClose: () => void;
+  isOpen: boolean;
+}
+
+export function UserDrawer({ userId, onClose, isOpen }: UserDrawerProps) {
   return (
-    <Drawer>
-      <DrawerTrigger asChild>
-        <Button>Novo usuário</Button>
-      </DrawerTrigger>
+    <Drawer open={isOpen} onOpenChange={onClose}>
       <DrawerContent>
         <div className="mx-auto w-full max-w-sm">
           <DrawerHeader>
-            <DrawerTitle>Formulário de novo usuario</DrawerTitle>
+            <DrawerTitle>
+              {userId ? "Editar usuário" : "Formulário de novo usuário"}
+            </DrawerTitle>
             <DrawerDescription>
-              Preencha o formulario para criar novo usuário
+              {userId
+                ? "Atualize as informações do usuário"
+                : "Preencha o formulário para criar novo usuário"}
             </DrawerDescription>
           </DrawerHeader>
           <div className="p-4 pb-0">
-            <UserForm />
+            <UserForm userId={userId} />
           </div>
           <DrawerFooter>
             <DrawerClose asChild>

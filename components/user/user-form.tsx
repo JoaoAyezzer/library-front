@@ -14,6 +14,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useEffect, useState } from "react";
+import { UserResponse } from "@/models/user";
+import { userService } from "@/services/user-service";
+import { toast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -26,22 +30,54 @@ const formSchema = z.object({
     message: "Telefone deve ter no mínimo 10 caracteres",
   }),
 });
+interface UserFormProps {
+  userId?: string;
+}
+export default function UserForm({ userId }: UserFormProps) {
+  const [user, setUser] = useState<UserResponse | null>(null);
 
-export default function UserForm() {
+  useEffect(() => {
+    if (userId) {
+      const fetchUsers = async () => {
+        try {
+          const data = await userService.getById(userId);
+          setUser(data);
+        } catch (error) {
+          console.error("Failed to fetch users:", error);
+        }
+      };
+
+      fetchUsers();
+    }
+  }, [userId]);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
+      name: user?.name ?? "",
+      email: user?.email ?? "",
+      phone: user?.phone ?? "",
     },
   });
 
+  function onToast(title: string, description: string) {
+    toast({
+      title: title,
+      description: description,
+    });
+  }
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+    if (userId) {
+      // Update user
+      return;
+    }
+    userService.createUser(values).then((response) => {
+      form.reset();
+      if (response.status === 201) {
+        onToast("Sucesso!", "Usuário criado com sucesso");
+      }
+    });
   }
 
   return (
