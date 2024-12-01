@@ -1,5 +1,6 @@
 import { http } from "@/src/lib/http.config";
-import { LoanResponse } from "@/src/models/loan";
+import { LoanRequest, LoanResponse } from "@/src/models/loan";
+import { AxiosResponse } from "axios";
 
 class LoanService {
   async getAllLoan(): Promise<LoanResponse[]> {
@@ -7,7 +8,15 @@ class LoanService {
       const response = await http.client.get<LoanResponse[]>("/book-loans");
       return response.data;
     } catch (error) {
-      console.error("Error fetching books:", error);
+      console.error("Error fetching book-loans:", error);
+      throw error;
+    }
+  }
+  async createLoan(data: LoanRequest): Promise<AxiosResponse> {
+    try {
+      return await http.client.post<AxiosResponse>("/book-loans", data);
+    } catch (error) {
+      console.error("Error fetching book-loans:", error);
       throw error;
     }
   }

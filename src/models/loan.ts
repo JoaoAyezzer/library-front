@@ -9,5 +9,9 @@ interface LoanResponse {
   updatedAt: string;
   status: string;
 }
-
-export type { LoanResponse };
+interface LoanRequest {
+  bookId: string;
+  userId: string;
+  returnDate: Date;
+}
+export type { LoanResponse, LoanRequest };

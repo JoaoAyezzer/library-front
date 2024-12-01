@@ -14,13 +14,15 @@ import { toast } from "@/src/hooks/use-toast";
 
 interface BookCardProps {
   book: BookResponse;
-  onEdit: () => void;
-  onFetchBooks: () => void;
-  onBorrow: () => void;
+  deleteEnabled?: boolean;
+  onEdit?: () => void;
+  onFetchBooks?: () => void;
+  onBorrow?: () => void;
 }
 
 const BookCard: React.FC<BookCardProps> = ({
   book: { id, title, authors, publishedDate },
+  deleteEnabled,
   onEdit,
   onFetchBooks,
   onBorrow,
@@ -33,7 +35,7 @@ const BookCard: React.FC<BookCardProps> = ({
           title: "Deletado",
           description: "Livro deletado com sucesso",
         });
-        onFetchBooks();
+        if (onFetchBooks) onFetchBooks();
       })
       .catch((error) => {
         toast({
@@ -44,7 +46,7 @@ const BookCard: React.FC<BookCardProps> = ({
       });
   };
   return (
-    <Card>
+    <Card className="min-w-96">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
       </CardHeader>
@@ -54,15 +56,19 @@ const BookCard: React.FC<BookCardProps> = ({
       </CardContent>
       <CardFooter className="justify-between">
         <Button onClick={onBorrow}>Emprestar</Button>
-        <Button variant="outline" onClick={onEdit}>
-          Editar
-        </Button>
-        <DialogAlert
-          buttonTrigger={<Button variant="destructive">Deletar</Button>}
-          title="Deletar livro"
-          description={`Tem certeza que deseja deletar o livro: ${title}?`}
-          onConfirm={() => onDeleteBook(id)}
-        />
+        {onEdit && (
+          <Button variant="outline" onClick={onEdit}>
+            Editar
+          </Button>
+        )}
+        {deleteEnabled && (
+          <DialogAlert
+            buttonTrigger={<Button variant="destructive">Deletar</Button>}
+            title="Deletar livro"
+            description={`Tem certeza que deseja deletar o livro: ${title}?`}
+            onConfirm={() => onDeleteBook(id)}
+          />
+        )}
       </CardFooter>
     </Card>
   );
