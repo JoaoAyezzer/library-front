@@ -5,4 +5,8 @@ interface CategoryResponse {
   updatedAt: string;
 }
 
-export type { CategoryResponse };
+interface CategoryRequest {
+  name: string;
+}
+
+export type { CategoryResponse, CategoryRequest };

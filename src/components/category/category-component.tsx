@@ -1,7 +1,4 @@
-import { useEffect, useState } from "react";
-import { userService } from "@/src/services/user-service";
-import { UserResponse } from "@/src/models/user";
-import { UserDrawer } from "./user-drawer";
+"use client";
 import {
   Table,
   TableBody,
@@ -10,53 +7,55 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../ui/table";
-import { Button } from "@/src/components/ui/button";
-import DialogAlert from "../dialog-alert";
+} from "@/src/components/ui/table";
 import { toast } from "@/src/hooks/use-toast";
+import { CategoryResponse } from "@/src/models/category";
+import { categoryService } from "@/src/services/category-service";
+import { useEffect, useState } from "react";
+import { Button } from "../ui/button";
+import CategoryDrawer from "./category-drawer";
+import DialogAlert from "../dialog-alert";
 
-export default function UserComponent() {
-  const [users, setUsers] = useState<UserResponse[]>([]);
-  const [userId, setUserId] = useState<string | null>(null);
+export function CategoryComponent() {
+  const [categories, setCategories] = useState<CategoryResponse[]>([]);
+  const [categoryId, setCategoryId] = useState<string | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const fetchUsers = async () => {
+  const fetchCategories = async () => {
     try {
-      const data = await userService.getAllUsers();
-      setUsers(data);
+      const data = await categoryService.getAllCategories();
+      setCategories(data);
     } catch (error) {
-      console.error("Failed to fetch users:", error);
+      console.error("Failed to fetch books:", error);
     }
   };
 
   useEffect(() => {
-    fetchUsers();
+    fetchCategories();
   }, []);
 
   const handleDrawerClose = () => {
     setIsDrawerOpen(false);
-    fetchUsers();
+    fetchCategories();
   };
-
   const handleDrawerForCreate = () => {
-    setUserId(null);
+    setCategoryId(null);
     setIsDrawerOpen(true);
   };
 
-  const onEditUser = (id: string) => {
-    setUserId(id);
+  const onEditCategory = (id: string) => {
+    setCategoryId(id);
     setIsDrawerOpen(true);
   };
-
-  const onDeleteUser = (id: string) => {
-    userService
+  const onDeleteCategory = (id: string) => {
+    categoryService
       .deleteById(id)
       .then(() => {
         toast({
           title: "Deletado",
           description: "Usuário deletado com sucesso",
         });
-        fetchUsers();
+        fetchCategories();
       })
       .catch((error) => {
         toast({
@@ -66,48 +65,46 @@ export default function UserComponent() {
         console.error("Failed to delete user:", error);
       });
   };
-
   return (
     <>
       <div className="flex flex-row justify-between">
         <h1>Usuários</h1>
         <Button onClick={() => handleDrawerForCreate()}>Novo usuário</Button>
       </div>
-      <UserDrawer
+      <CategoryDrawer
         triggerButton={<Button>Novo usuário</Button>}
         onClose={handleDrawerClose}
         isOpen={isDrawerOpen}
-        userId={userId}
+        categoryId={categoryId}
       />
       <Table>
-        <TableCaption>Lista de usuários</TableCaption>
+        <TableCaption>Lista de categorias dos livros</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead>Nome</TableHead>
-            <TableHead>E-mail</TableHead>
-            <TableHead>Telefone</TableHead>
+            <TableHead className="w-[100px]">Nome</TableHead>
             <TableHead>Criado em</TableHead>
-            <TableHead>Alterado em</TableHead>
+            <TableHead>Atualizado em</TableHead>
             <TableHead className="text-right">Opções</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {users.map((user) => (
-            <TableRow key={user.id}>
-              <TableCell className="font-medium">{user.name}</TableCell>
-              <TableCell className="font-medium">{user.email}</TableCell>
-              <TableCell className="font-medium">{user.phone}</TableCell>
-              <TableCell>{user.createdAt}</TableCell>
-              <TableCell>{user.updatedAt}</TableCell>
+          {categories.map((category) => (
+            <TableRow key={category.id}>
+              <TableCell className="font-medium">{category.name}</TableCell>
+              <TableCell>{category.createdAt}</TableCell>
+              <TableCell>{category.updatedAt}</TableCell>
               <TableCell className="text-right">
-                <Button className="mr-2" onClick={() => onEditUser(user.id)}>
+                <Button
+                  className="mr-2"
+                  onClick={() => onEditCategory(category.id)}
+                >
                   Editar
                 </Button>
                 <DialogAlert
                   buttonTrigger={<Button variant="destructive">Deletar</Button>}
                   title="Deletar usuário"
                   description="Tem certeza que deseja deletar esse usuário?"
-                  onConfirm={() => onDeleteUser(user.id)}
+                  onConfirm={() => onDeleteCategory(category.id)}
                 />
               </TableCell>
             </TableRow>
