@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { userService } from "@/src/services/user-service";
 import { UserResponse } from "@/src/models/user";
-import { UserDrawer } from "./user-drawer";
+import UserDrawer from "./user-drawer";
 import {
   Table,
   TableBody,

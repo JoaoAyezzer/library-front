@@ -16,7 +16,7 @@ import { Button } from "../ui/button";
 import CategoryDrawer from "./category-drawer";
 import DialogAlert from "../dialog-alert";
 
-export function CategoryComponent() {
+export default function CategoryComponent() {
   const [categories, setCategories] = useState<CategoryResponse[]>([]);
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);

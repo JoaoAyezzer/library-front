@@ -6,7 +6,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/src/components/ui/sidebar";
-import { AppSidebar } from "@/src/components/app-sidebar";
+import AppSidebar from "@/src/components/app-sidebar";
 import { Separator } from "@radix-ui/react-separator";
 import { Toaster } from "@/src/components/ui/toaster";
 

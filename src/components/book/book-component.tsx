@@ -6,7 +6,7 @@ import { BookResponse } from "@/src/models/book";
 import { Button } from "../ui/button";
 import BookDrawer from "./book-drawer";
 
-const BookComponent: React.FC = () => {
+export default function BookComponent() {
   const [books, setBooks] = useState<BookResponse[]>([]);
   const [bookId, setBookId] = useState<string | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -61,6 +61,4 @@ const BookComponent: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default BookComponent;
+}

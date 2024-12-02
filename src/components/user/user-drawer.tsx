@@ -19,7 +19,11 @@ interface UserDrawerProps {
   isOpen: boolean;
 }
 
-export function UserDrawer({ userId, onClose, isOpen }: UserDrawerProps) {
+export default function UserDrawer({
+  userId,
+  onClose,
+  isOpen,
+}: UserDrawerProps) {
   return (
     <Drawer open={isOpen} onOpenChange={onClose}>
       <DrawerContent>

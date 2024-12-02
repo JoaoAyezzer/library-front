@@ -25,8 +25,8 @@ export default function BookDrawer({
 }: UserDrawerProps) {
   return (
     <Drawer open={isOpen} onOpenChange={onClose}>
-      <DrawerContent>
-        <div className="mx-auto w-full max-w-md max-h-screen">
+      <DrawerContent className="flex flex-col">
+        <div className="mx-auto w-full max-w-lg max-h-screen">
           <DrawerHeader>
             <DrawerTitle>
               {bookId ? "Editar livro" : "Formulário de novo livro"}
@@ -41,7 +41,7 @@ export default function BookDrawer({
             <BookForm bookId={bookId} />
           </div>
           <DrawerFooter>
-            <DrawerClose asChild>
+            <DrawerClose asChild className="w-full">
               <Button variant="outline">Cancel</Button>
             </DrawerClose>
           </DrawerFooter>

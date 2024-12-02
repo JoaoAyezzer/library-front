@@ -64,7 +64,7 @@ export default function UserForm({ userId }: UserFormProps) {
       description: description,
     });
   }
-  // 2. Define a submit handler.
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     if (userId) {
       userService

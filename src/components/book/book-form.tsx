@@ -177,11 +177,11 @@ export default function BookForm({ bookId, onSubmitSuccess }: BookFormProps) {
   }
 
   return (
-    <ScrollArea className="rounded-md h-[500px] px-4">
-      <Form {...form}>
+    <Form {...form}>
+      <ScrollArea className="h-[500px] px-4 w-full">
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="grid grid-cols-1 md:grid-cols-2 gap-4"
+          className="grid grid-cols-2 md:grid-cols-2 gap-4"
         >
           <div className="md:col-span-2">
             <FormField
@@ -353,14 +353,13 @@ export default function BookForm({ bookId, onSubmitSuccess }: BookFormProps) {
               )}
             />
           </div>
-
           <div className="md:col-span-2">
             <Button type="submit" className="w-full">
               Salvar
             </Button>
           </div>
         </form>
-      </Form>
-    </ScrollArea>
+      </ScrollArea>
+    </Form>
   );
 }

@@ -20,13 +20,13 @@ interface BookCardProps {
   onBorrow?: () => void;
 }
 
-const BookCard: React.FC<BookCardProps> = ({
+export default function BookCard({
   book: { id, title, authors, publishedDate },
   deleteEnabled,
   onEdit,
   onFetchBooks,
   onBorrow,
-}) => {
+}: BookCardProps) {
   const onDeleteBook = (id: string) => {
     bookService
       .deleteById(id)
@@ -72,6 +72,4 @@ const BookCard: React.FC<BookCardProps> = ({
       </CardFooter>
     </Card>
   );
-};
-
-export default BookCard;
+}
